@@ -482,6 +482,7 @@ btnWatchFolder.addEventListener('click', async () => {
 // ── License Support ────────────────────────────────────────────────
 const inputLicense = $('#input-license');
 const btnActivateLicense = $('#btn-activate-license');
+const btnBuyLicense = $('#btn-buy-license');
 const btnDeactivateLicense = $('#btn-deactivate-license');
 const licenseStatus = $('#license-status');
 let isPro = false;
@@ -496,6 +497,7 @@ async function checkLicense() {
       if(licenseStatus) licenseStatus.innerHTML = '<span style="color: #34d399; font-weight:600;">Pro Active ✅</span>';
       if(inputLicense) inputLicense.style.display = 'none';
       if(btnActivateLicense) btnActivateLicense.style.display = 'none';
+      if(btnBuyLicense) btnBuyLicense.style.display = 'none';
       if(btnDeactivateLicense) btnDeactivateLicense.style.display = 'inline-block';
       
       toggleShortcut.disabled = false;
@@ -506,6 +508,7 @@ async function checkLicense() {
       if(licenseStatus) licenseStatus.innerHTML = 'Activate for unlimited uploads.';
       if(inputLicense) inputLicense.style.display = 'inline-block';
       if(btnActivateLicense) btnActivateLicense.style.display = 'inline-block';
+      if(btnBuyLicense) btnBuyLicense.style.display = 'inline-block';
       if(btnDeactivateLicense) btnDeactivateLicense.style.display = 'none';
       
       toggleShortcut.disabled = true;
@@ -555,6 +558,31 @@ if(btnDeactivateLicense) {
         checkLicense(); // reload
       }
     } catch (err) { showToast('Error deactivating', 'error'); }
+  });
+}
+
+if(btnBuyLicense) {
+  btnBuyLicense.addEventListener('click', async () => {
+    showLoader('Redirecting to checkout …');
+    try {
+      const resp = await fetch('/api/payments/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ redirect_url: 'https://ctrlsense.vercel.app/purchases.html' })
+      });
+      const res = await resp.json();
+      if (res.success && res.checkout_url) {
+        // Open the checkout URL in the system browser
+        window.open(res.checkout_url, '_blank');
+        showToast('Checkout opened in your browser', 'info');
+      } else {
+        showToast(res.error || 'Failed to create checkout session', 'error');
+      }
+    } catch (err) {
+      showToast('Error: ' + err.message, 'error');
+    } finally {
+      hideLoader();
+    }
   });
 }
 
