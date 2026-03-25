@@ -102,16 +102,11 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
+  <!-- Load External Config -->
+  <script src="firebase-config.js"></script>
+
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDo8dRr4WICkFoYEhtRTxi0EDd5dgdJ9_Q",
-      authDomain: "ctrlsense-e1310.firebaseapp.com",
-      projectId: "ctrlsense-e1310",
-      storageBucket: "ctrlsense-e1310.firebasestorage.app",
-      messagingSenderId: "339634652508",
-      appId: "1:339634652508:web:9d06216b3f964d1fdf6d99",
-      measurementId: "G-5HDL6RGT0L"
-    };
+    // Initialized from firebase-config.js
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -135,7 +130,38 @@
         document.getElementById('dash-name').textContent = user.displayName || user.email.split('@')[0];
         document.getElementById('dash-email').textContent = user.email;
 
-        loadPurchases(user.uid);
+        // Check for payment redirect parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+        const paymentId = urlParams.get('payment_id');
+        const licenseKey = urlParams.get('license_key');
+        
+        console.log('Payment Redirect Check:', { status, paymentId, licenseKey });
+
+        if (paymentId) {
+          showToast('Payment detected! Processing...', 'info');
+          console.log('Valid payment detected, recording to Firestore...');
+          const finalLicenseKey = licenseKey || 'PRO-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+          
+          db.collection('purchases').doc(paymentId).set({
+            uid: user.uid,
+            paymentId: paymentId,
+            licenseKey: finalLicenseKey,
+            amount: urlParams.get('amount') || '5',
+            currency: urlParams.get('currency') || 'USD',
+            status: 'active',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          }).then(() => {
+            console.log('Purchase recorded successfully');
+            window.history.replaceState({}, document.title, window.location.pathname);
+            loadPurchases(user.uid);
+          }).catch(err => {
+            console.error('Error recording purchase:', err);
+            loadPurchases(user.uid);
+          });
+        } else {
+          loadPurchases(user.uid);
+        }
       } else {
         loginPrompt.style.display = 'block';
         dashboard.style.display = 'none';
@@ -145,7 +171,8 @@
     function loadPurchases(uid) {
       const list = document.getElementById('purchases-list');
 
-      db.collection('purchases').where('uid', '==', uid).orderBy('createdAt', 'desc').get()
+      // Removed .orderBy() to avoid requiring a composite index in Firestore
+      db.collection('purchases').where('uid', '==', uid).get()
         .then(snapshot => {
           if (snapshot.empty) {
             list.innerHTML = `
@@ -157,9 +184,18 @@
             return;
           }
 
+          let purchases = [];
+          snapshot.forEach(doc => purchases.push(doc.data()));
+          
+          // Sort locally by createdAt descending
+          purchases.sort((a, b) => {
+            const timeA = a.createdAt?.seconds || 0;
+            const timeB = b.createdAt?.seconds || 0;
+            return timeB - timeA;
+          });
+
           let html = '';
-          snapshot.forEach(doc => {
-            const p = doc.data();
+          purchases.forEach(p => {
             const date = p.createdAt ? new Date(p.createdAt.seconds * 1000).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
             const statusClass = p.status === 'active' ? 'status-active' : 'status-pending';
 

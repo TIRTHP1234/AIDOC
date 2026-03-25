@@ -21,6 +21,11 @@ import uuid
 
 from flask import Flask, jsonify, request, send_from_directory
 from flaskwebgui import FlaskUI
+from dotenv import load_dotenv
+from dodopayments import DodoPayments
+
+# Load environment variables from .env
+load_dotenv()
 
 from core.config import UPLOAD_DIR
 from core.embeddings import VectorStore
@@ -31,6 +36,12 @@ from core import metadata
 # ── Flask App ────────────────────────────────────────────────────────
 app = Flask(__name__, static_folder="frontend", static_url_path="")
 vector_store: VectorStore | None = None
+
+# ── Dodo Payments Client ─────────────────────────────────────────────
+dodo_client = DodoPayments(
+    bearer_token=os.getenv("DODO_PAYMENTS_API_KEY"),
+    environment=os.getenv("DODO_ENVIRONMENT", "test_mode")
+)
 
 
 # ── Serve Frontend ───────────────────────────────────────────────────
@@ -85,6 +96,43 @@ def upload_file():
         metadata.add_document(doc_id, filename, file_path, summary=doc_summary)
 
         return jsonify({"success": True, "doc_id": doc_id, "filename": filename})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+@app.route("/api/payments/checkout", methods=["POST"])
+def create_checkout_session():
+    """Create a Dodo Payments checkout session for the Pro plan."""
+    try:
+        product_id = os.getenv("DODO_PRODUCT_ID")
+        if not product_id:
+            return jsonify({"success": False, "error": "DODO_PRODUCT_ID not configured in .env"})
+
+        # The redirect URL should point to the web dashboard
+        data = request.get_json() or {}
+        redirect_url = data.get("redirect_url", "https://ctrlsense.vercel.app/purchases.html")
+
+        # Checkout session via SDK
+        session = dodo_client.checkout_sessions.create(
+            product_cart=[
+                {
+                    "product_id": product_id,
+                    "quantity": 1
+                }
+            ],
+            return_url=redirect_url
+        )
+        
+        # In test mode, we construct the URL but rely on the SDK's session if available
+        # The user provided link: https://test.checkout.dodopayments.com/buy/pdt_...
+        # Note: Static links use 'redirect_url', but SDK uses 'return_url'
+        checkout_url = f"https://test.checkout.dodopayments.com/buy/{product_id}?quantity=1&redirect_url={redirect_url}"
+        
+        # If the session object has a checkout_url, use it
+        if hasattr(session, 'checkout_url') and session.checkout_url:
+            checkout_url = session.checkout_url
+
+        return jsonify({"success": True, "checkout_url": checkout_url})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
@@ -387,6 +435,8 @@ def setup_global_hotkey():
 @app.route("/api/settings/license", methods=["GET", "POST", "DELETE"])
 def manage_license():
     """Read, update or delete Pro license verification status."""
+    import importlib, core.license
+    importlib.reload(core.license)
     from core.license import is_pro_active, activate_license, deactivate_license
     
     if request.method == "DELETE":

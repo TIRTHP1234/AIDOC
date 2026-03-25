@@ -166,64 +166,229 @@
 
     /* AUTH UI */
     .auth-btn {
-      background: var(--accent); color: #fff; border: none; padding: 8px 18px;
-      border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    .auth-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
 
-    .user-menu { position: relative; display: flex; align-items: center; gap: 8px; cursor: pointer; }
-    .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
-    .user-name { font-size: 13px; font-weight: 600; color: var(--ink); max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .auth-btn:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    .user-menu {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      object-fit: cover;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
     .user-dropdown {
-      position: absolute; top: 44px; right: 0; background: #1a1a24; border: 1px solid var(--border);
-      border-radius: 10px; min-width: 180px; box-shadow: 0 12px 32px rgba(0,0,0,0.4); z-index: 999;
-      display: none; overflow: hidden;
+      position: absolute;
+      top: 44px;
+      right: 0;
+      background: #1a1a24;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-width: 180px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      z-index: 999;
+      display: none;
+      overflow: hidden;
     }
-    .user-dropdown.open { display: block; }
-    .user-dropdown a, .user-dropdown button {
-      display: block; width: 100%; text-align: left; padding: 12px 16px; font-size: 13px;
-      color: #c8c8d8; background: none; border: none; cursor: pointer; text-decoration: none;
+
+    .user-dropdown.open {
+      display: block;
+    }
+
+    .user-dropdown a,
+    .user-dropdown button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #c8c8d8;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
       transition: 0.15s;
     }
-    .user-dropdown a:hover, .user-dropdown button:hover { background: rgba(167,139,250,0.1); color: #fff; }
-    .user-dropdown .dd-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 4px 0; }
+
+    .user-dropdown a:hover,
+    .user-dropdown button:hover {
+      background: rgba(167, 139, 250, 0.1);
+      color: #fff;
+    }
+
+    .user-dropdown .dd-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.06);
+      margin: 4px 0;
+    }
 
     /* Auth Modal */
     .auth-modal-backdrop {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
-      z-index: 9999; display: none; align-items: center; justify-content: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
       backdrop-filter: blur(4px);
     }
-    .auth-modal-backdrop.open { display: flex; }
+
+    .auth-modal-backdrop.open {
+      display: flex;
+    }
+
     .auth-modal {
-      background: #1a1a24; border: 1px solid var(--border); border-radius: 16px;
-      padding: 36px; max-width: 400px; width: 90%; text-align: center;
+      background: #1a1a24;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
     }
-    .auth-modal h3 { color: #fff; font-size: 20px; margin-bottom: 8px; }
-    .auth-modal p { color: var(--ink2); font-size: 14px; margin-bottom: 24px; }
+
+    .auth-modal h3 {
+      color: #fff;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .auth-modal p {
+      color: var(--ink2);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
     .auth-google-btn {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border);
-      background: #fff; color: #333; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: #333;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
     }
-    .auth-google-btn:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); transform: translateY(-1px); }
-    .auth-google-btn img { width: 20px; height: 20px; }
-    .auth-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--ink3); font-size: 12px; }
-    .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .auth-google-btn:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .auth-google-btn img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: var(--ink3);
+      font-size: 12px;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
     .auth-input {
-      width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border);
-      background: var(--bg2, #0f0f15); color: #fff; font-size: 14px; outline: none; margin-bottom: 12px;
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg2, #0f0f15);
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 12px;
     }
-    .auth-input:focus { border-color: var(--accent); }
+
+    .auth-input:focus {
+      border-color: var(--accent);
+    }
+
     .auth-submit {
-      width: 100%; padding: 12px; border-radius: 10px; border: none;
-      background: var(--accent); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s;
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
     }
-    .auth-submit:hover { filter: brightness(1.15); }
-    .auth-toggle { margin-top: 16px; font-size: 13px; color: var(--ink2); }
-    .auth-toggle a { color: var(--accent); cursor: pointer; text-decoration: none; }
-    .auth-error { color: #f87171; font-size: 13px; margin-top: 8px; min-height: 18px; }
+
+    .auth-submit:hover {
+      filter: brightness(1.15);
+    }
+
+    .auth-toggle {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--ink2);
+    }
+
+    .auth-toggle a {
+      color: var(--accent);
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .auth-error {
+      color: #f87171;
+      font-size: 13px;
+      margin-top: 8px;
+      min-height: 18px;
+    }
 
     /* HERO */
     .hero {
@@ -2213,8 +2378,11 @@
     </div>
 
     <div class="demo-wrap" style="position: relative; perspective: 1200px; margin-top: 48px;">
-      <div class="demo-window-glow" style="position: absolute; width: 300px; height: 300px; background: var(--accent); filter: blur(80px); border-radius: 50%; opacity: 0.25; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; pointer-events: none;"></div>
-      <div class="demo-window" style="transform-style: preserve-3d; transition: transform 0.2s ease-out; background: #181820; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4);">
+      <div class="demo-window-glow"
+        style="position: absolute; width: 300px; height: 300px; background: var(--accent); filter: blur(80px); border-radius: 50%; opacity: 0.25; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; pointer-events: none;">
+      </div>
+      <div class="demo-window"
+        style="transform-style: preserve-3d; transition: transform 0.2s ease-out; background: #181820; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4);">
         <div class="demo-bar">
           <div class="ddot dd-r"></div>
           <div class="ddot dd-y"></div>
@@ -2865,9 +3033,21 @@
             <li style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #fff;"><span
                 style="color: var(--accent);">✦</span> Custom Background Watch Folder</li>
           </ul>
-          <a href="https://entrextlabs.substack.com/subscribe" target="_blank"
+          <a id="pro-upgrade-link" href="https://test.checkout.dodopayments.com/buy/pdt_0NbH8qheEqFDGTInPAlTP?quantity=1" target="_blank"
             style="display: block; text-align: center; background: var(--accent); color: var(--bg); padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none; transition: 0.15s; box-shadow: 0 4px 12px rgba(167, 139, 250, 0.2);">Upgrade
             to Pro</a>
+          <script>
+            setTimeout(() => {
+              const upgradeBtn = document.getElementById('pro-upgrade-link');
+              let baseUrl = window.location.href.split('?')[0].split('#')[0];
+              if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
+              if (baseUrl.endsWith('index.html')) baseUrl = baseUrl.replace('/index.html', '');
+              
+              const redirectUrl = baseUrl + '/purchases.html';
+              // Add both redirect_url and return_url for maximum compatibility with Dodo
+              upgradeBtn.href += "&redirect_url=" + encodeURIComponent(redirectUrl) + "&return_url=" + encodeURIComponent(redirectUrl);
+            }, 500);
+          </script>
         </div>
       </div>
     </div>
@@ -3549,7 +3729,7 @@
       function drawAurora() {
         if (!ac) return;
         ac.width = window.innerWidth;
-        ac.height = 500; 
+        ac.height = 500;
         ax.clearRect(0, 0, ac.width, ac.height);
 
         let isLight = document.body.classList.contains("light");
@@ -3558,10 +3738,10 @@
         let c3 = isLight ? "rgba(5,150,105,0.15)" : "rgba(52,211,153,0.15)";
 
         auraTime += 0.0008; // slow dreamy drift
-        
+
         let x1 = ac.width * (0.3 + 0.2 * Math.sin(auraTime));
         let y1 = ac.height * (0.4 + 0.15 * Math.cos(auraTime * 0.7));
-        
+
         let x2 = ac.width * (0.7 + 0.2 * Math.cos(auraTime * 0.8));
         let y2 = ac.height * (0.5 + 0.2 * Math.sin(auraTime * 0.9));
 
@@ -3569,7 +3749,7 @@
         let y3 = ac.height * (0.6 + 0.18 * Math.cos(auraTime * 1.1));
 
         ax.globalCompositeOperation = 'screen';
-        
+
         let blooms = [
           { x: x1, y: y1, c: c1 },
           { x: x2, y: y2, c: c2 },
@@ -3587,10 +3767,10 @@
         ax.globalCompositeOperation = 'source-over';
         requestAnimationFrame(drawAurora);
       }
-      
+
       // Start Loop
       drawAurora();
-      
+
       window.addEventListener('resize', () => {
         if (ac) { ac.width = window.innerWidth; ac.height = 500; }
       });
@@ -3599,11 +3779,11 @@
       const demoWrap = document.querySelector('.demo-wrap');
       const demoWin = document.querySelector('.demo-window');
       const demoGlow = document.querySelector('.demo-window-glow');
-      
-      if(demoWrap && demoWin) {
+
+      if (demoWrap && demoWin) {
         let orbitTime = 0;
         function orbitGlow() {
-          if(!demoGlow) return;
+          if (!demoGlow) return;
           orbitTime += 0.005;
           const radius = 180;
           const ox = radius * Math.cos(orbitTime);
@@ -3621,10 +3801,10 @@
           const yc = rect.height / 2;
           const dx = x - xc;
           const dy = y - yc;
-          
+
           demoWin.style.transform = `rotateY(${dx / 35}deg) rotateX(${-dy / 25}deg)`;
         });
-        
+
         demoWrap.addEventListener('mouseleave', () => {
           demoWin.style.transform = 'rotateX(0) rotateY(0)';
         });
@@ -3724,7 +3904,8 @@
       <button class="auth-submit" id="auth-email-btn" onclick="signInWithEmail()">Sign In</button>
       <div class="auth-toggle" id="auth-toggle">Don't have an account? <a onclick="toggleAuthMode()">Sign Up</a></div>
       <div class="auth-error" id="auth-error"></div>
-      <button onclick="closeAuthModal()" style="margin-top:16px; background:none; border:none; color:var(--ink3); cursor:pointer; font-size:13px;">Cancel</button>
+      <button onclick="closeAuthModal()"
+        style="margin-top:16px; background:none; border:none; color:var(--ink3); cursor:pointer; font-size:13px;">Cancel</button>
     </div>
   </div>
 
@@ -3733,17 +3914,11 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
+  <!-- Load External Config -->
+  <script src="firebase-config.js"></script>
+
   <script>
-    // ── Firebase Init ──
-    const firebaseConfig = {
-      apiKey: "AIzaSyDo8dRr4WICkFoYEhtRTxi0EDd5dgdJ9_Q",
-      authDomain: "ctrlsense-e1310.firebaseapp.com",
-      projectId: "ctrlsense-e1310",
-      storageBucket: "ctrlsense-e1310.firebasestorage.app",
-      messagingSenderId: "339634652508",
-      appId: "1:339634652508:web:9d06216b3f964d1fdf6d99",
-      measurementId: "G-5HDL6RGT0L"
-    };
+    // Initialized from firebase-config.js
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -3851,8 +4026,7 @@
 
     // ── Download Gate — require login before download ──
     // 🔄 Bump this version when you update the zip file to bust browser cache
-    const APP_VERSION = '1.2.0';
-    const DOWNLOAD_URL = `AiDocumentAssistant-Windows.zip?v=${APP_VERSION}&t=${Date.now()}`;
+    const APP_VERSION = '1.3.0';
     let pendingDownload = false;
 
     function gateDownload(e) {
@@ -3868,8 +4042,9 @@
     }
 
     function triggerDownload() {
+      const latestUrl = `AiDocumentAssistant-Windows.zip?v=${APP_VERSION}&t=${Date.now()}`;
       const a = document.createElement('a');
-      a.href = DOWNLOAD_URL;
+      a.href = latestUrl;
       a.download = '';
       document.body.appendChild(a);
       a.click();
