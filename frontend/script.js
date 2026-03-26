@@ -562,13 +562,30 @@ if(btnDeactivateLicense) {
 }
 
 if(btnBuyLicense) {
-  btnBuyLicense.addEventListener('click', () => {
-    // Open the live landing page pricing section directly
-    // This ensures payments work even in the portable build without local API keys
-    window.open('https://ctrlsense.vercel.app/#pricing', '_blank');
-    showToast('Opening checkout in your browser...', 'info');
+  btnBuyLicense.addEventListener('click', async () => {
+    showToast('Getting checkout session...', 'info');
+    try {
+      const resp = await fetch('/api/payments/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ redirect_url: window.location.href })
+      });
+      const res = await resp.json();
+      
+      if (res.success && res.checkout_url) {
+        showToast('Opening checkout in your browser...', 'success');
+        window.open(res.checkout_url, '_blank');
+      } else {
+        showToast(res.error || 'Failed to create checkout session', 'error');
+        // Fallback to landing page if API fails
+        window.open('https://ctrlsense.vercel.app/#pricing', '_blank');
+      }
+    } catch (err) {
+      showToast('Network error: ' + err.message, 'error');
+    }
   });
 }
+
 
 // ── Init ────────────────────────────────────────────────────────────
 console.log('[DocAssist] Frontend ready');
