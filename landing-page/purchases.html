@@ -130,35 +130,52 @@
         document.getElementById('dash-name').textContent = user.displayName || user.email.split('@')[0];
         document.getElementById('dash-email').textContent = user.email;
 
-        // Check for payment redirect parameters
+        // Check for payment redirect parameters (Dodo Payments)
         const urlParams = new URLSearchParams(window.location.search);
-        const status = urlParams.get('status');
-        const paymentId = urlParams.get('payment_id');
+        
+        // Dodo Payments can send payment_id, checkout_id, or session_id
+        const status = urlParams.get('status') || urlParams.get('checkout_status');
+        const paymentId = urlParams.get('payment_id') || urlParams.get('checkout_id') || urlParams.get('checkout_session_id') || urlParams.get('session_id');
         const licenseKey = urlParams.get('license_key');
         
-        console.log('Payment Redirect Check:', { status, paymentId, licenseKey });
+        console.log('Payment Redirect Check:', { status, paymentId, licenseKey, allParams: Object.fromEntries(urlParams) });
 
-        if (paymentId) {
-          showToast('Payment detected! Processing...', 'info');
+        if (paymentId && (status === 'succeeded' || status === 'completed' || !status)) {
+          // Visual feedback
+          const list = document.getElementById('purchases-list');
+          list.innerHTML = `<div class="empty-state"><h3>✨ Finalizing your Pro Upgrade...</h3><p>Please wait a moment while we secure your license key.</p></div>`;
+          
           console.log('Valid payment detected, recording to Firestore...');
+          
+          // Fallback license key if missing from URL
           const finalLicenseKey = licenseKey || 'PRO-' + Math.random().toString(36).substr(2, 9).toUpperCase();
           
-          db.collection('purchases').doc(paymentId).set({
+          const purchaseData = {
             uid: user.uid,
             paymentId: paymentId,
             licenseKey: finalLicenseKey,
-            amount: urlParams.get('amount') || '5',
-            currency: urlParams.get('currency') || 'USD',
+            amount: urlParams.get('amount') || '399',
+            currency: urlParams.get('currency') || 'INR',
             status: 'active',
+            source: 'dodo_payments',
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          }).then(() => {
-            console.log('Purchase recorded successfully');
-            window.history.replaceState({}, document.title, window.location.pathname);
+          };
+
+          db.collection('purchases').doc(paymentId).set(purchaseData).then(() => {
+            console.log('Purchase recorded successfully:', paymentId);
+            // Remove params from URL to avoid double-processing
+            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+            
+            alert('🎉 Congratulations! Your CtrlSense Pro license has been activated.');
             loadPurchases(user.uid);
           }).catch(err => {
             console.error('Error recording purchase:', err);
             loadPurchases(user.uid);
           });
+        } else if (urlParams.has('status') && urlParams.get('status') !== 'succeeded') {
+           console.warn('Payment not successful or cancelled:', status);
+           loadPurchases(user.uid);
         } else {
           loadPurchases(user.uid);
         }
