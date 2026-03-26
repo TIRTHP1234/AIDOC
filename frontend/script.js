@@ -482,7 +482,6 @@ btnWatchFolder.addEventListener('click', async () => {
 // ── License Support ────────────────────────────────────────────────
 const inputLicense = $('#input-license');
 const btnActivateLicense = $('#btn-activate-license');
-const btnBuyLicense = $('#btn-buy-license');
 const btnDeactivateLicense = $('#btn-deactivate-license');
 const licenseStatus = $('#license-status');
 let isPro = false;
@@ -508,7 +507,6 @@ async function checkLicense() {
       if(licenseStatus) licenseStatus.innerHTML = 'Activate for unlimited uploads.';
       if(inputLicense) inputLicense.style.display = 'inline-block';
       if(btnActivateLicense) btnActivateLicense.style.display = 'inline-block';
-      if(btnBuyLicense) btnBuyLicense.style.display = 'inline-block';
       if(btnDeactivateLicense) btnDeactivateLicense.style.display = 'none';
       
       toggleShortcut.disabled = true;
@@ -561,30 +559,7 @@ if(btnDeactivateLicense) {
   });
 }
 
-if(btnBuyLicense) {
-  btnBuyLicense.addEventListener('click', async () => {
-    showToast('Getting checkout session...', 'info');
-    try {
-      const resp = await fetch('/api/payments/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ redirect_url: window.location.href })
-      });
-      const res = await resp.json();
-      
-      if (res.success && res.checkout_url) {
-        showToast('Opening checkout in your browser...', 'success');
-        window.open(res.checkout_url, '_blank');
-      } else {
-        showToast(res.error || 'Failed to create checkout session', 'error');
-        // Fallback to landing page if API fails
-        window.open('https://ctrlsense.vercel.app/#pricing', '_blank');
-      }
-    } catch (err) {
-      showToast('Network error: ' + err.message, 'error');
-    }
-  });
-}
+// Removed: Buy Pro functionality
 
 
 // ── Init ────────────────────────────────────────────────────────────
